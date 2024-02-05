@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            colour: blue;
+        }
+
+        h2 {
+            color:black;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        button {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Add New Task</h2>
+    <input type="text" id="taskInput" placeholder="New task...">
+    <button onclick="addTask()">Add</button>
+
+    <h2>Pending Tasks</h2>
+    <ul id="pendingTasks"></ul>
+
+    <h2>Completed Tasks</h2>
+    <ul id="completedTasks"></ul>
+
+    <script>
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskText = taskInput.value.trim();
+
+            if (taskText !== '') {
+                const task = {
+                    text: taskText,
+                    addedDate: new Date(),
+                    completed: false,
+                    completedDate: null
+                };
+
+                tasks.push(task);
+                taskInput.value = '';
+                renderTasks();
+            }
+        }
+
+        function completeTask(index) {
+            tasks[index].completed = true;
+            tasks[index].completedDate = new Date();
+            renderTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const pendingTasksList = document.getElementById('pendingTasks');
+            const completedTasksList = document.getElementById('completedTasks');
+
+            pendingTasksList.innerHTML = '';
+            completedTasksList.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const listItem = document.createElement('li');
+                const button = document.createElement('button');
+
+                listItem.innerHTML = `
+                    <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
+                    <small>${task.addedDate.toLocaleString()}</small>`;
+
+                button.innerText = task.completed ? 'Delete' : 'Complete';
+                button.onclick = () => task.completed ? deleteTask(index) : completeTask(index);
+
+                listItem.appendChild(button);
+
+                if (task.completed) {
+                    completedTasksList.appendChild(listItem);
+                } else {
+                    pendingTasksList.appendChild(listItem);
+                }
+            });
+        }
+
+        const tasks = [];
+        renderTasks();
+    </script>
+</body>
+</html>
